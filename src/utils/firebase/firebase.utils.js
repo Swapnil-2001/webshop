@@ -1,9 +1,9 @@
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
-  // signInWithRedirect,
   signInWithPopup,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -36,6 +36,8 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 export const db = getFirestore(); // points to our database inside the console
 
 export const createUserDocumentFromAuth = async (userAuth) => {
+  if (!userAuth) return;
+
   const userDocRef = doc(db, "users", userAuth.uid); // use as unique id to get a document ref
   // gives the document reference inside db under "users" collection with uid
 
@@ -56,4 +58,9 @@ export const createUserDocumentFromAuth = async (userAuth) => {
     }
   }
   return userDocRef;
+};
+
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+  return await createUserWithEmailAndPassword(auth, email, password);
 };
